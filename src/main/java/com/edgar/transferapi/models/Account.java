@@ -1,7 +1,6 @@
 package com.edgar.transferapi.models;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.edgar.transferapi.models.user.User;
 
 @Entity
 public class Account {
@@ -23,22 +24,23 @@ public class Account {
 	
 	@Column(nullable=false, unique = true)
 	@NotBlank
-	private String account_number;
+	private String number;
 	
 	@NotNull(message="balance can not be empty")
 	private BigDecimal balance;
 	
-	@ManyToOne
-	private User user; // many accounts can belong to one user
+	/*  created account belongs to a user **/
+	@ManyToOne private User user;
 	
 	public Account() {
 		
 	}
 
-	public Account( @NotBlank String account_number,
-			@NotNull(message = "balance can not be empty") BigDecimal balance, User user) {
+	public Account(Long id, @NotBlank String number, @NotNull(message = "balance can not be empty") BigDecimal balance,
+			User user) {
 		super();
-		this.account_number = account_number;
+		this.id = id;
+		this.number = number;
 		this.balance = balance;
 		this.user = user;
 	}
@@ -51,12 +53,12 @@ public class Account {
 		this.id = id;
 	}
 
-	public String getAccount_number() {
-		return account_number;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setAccount_number(String account_number) {
-		this.account_number = account_number;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	public BigDecimal getBalance() {
@@ -77,27 +79,9 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", account_number=" + account_number + ", balance=" + balance + ", user=" + user
-				+ "]";
+		return "Account [id=" + id + ", number=" + number + ", balance=" + balance + ", user=" + user + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(account_number, balance, id, user);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Account other = (Account) obj;
-		return Objects.equals(account_number, other.account_number) && Objects.equals(balance, other.balance)
-				&& Objects.equals(id, other.id) && Objects.equals(user, other.user);
-	}
 	
 	
 	

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.edgar.transferapi.models.User;
+import com.edgar.transferapi.models.user.User;
 
 public class TransferRequest {
 	

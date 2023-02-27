@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.edgar.transferapi.models.Account;
 import com.edgar.transferapi.models.Transfer;
-import com.edgar.transferapi.models.User;
+import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.requests.TransferRequest;
 
 @Service

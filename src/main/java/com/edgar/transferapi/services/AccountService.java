@@ -1,12 +1,12 @@
 package com.edgar.transferapi.services;
 
 import java.math.BigDecimal;
-
-import javax.management.RuntimeErrorException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.edgar.transferapi.exceptions.AccountDoesntExistException;
 import com.edgar.transferapi.exceptions.AccountNumberAlreadyExists;
 import com.edgar.transferapi.models.Account;
 import com.edgar.transferapi.models.user.User;
@@ -61,14 +61,24 @@ public class AccountService {
 	}
 	
 	
+	/*  getAccount By number **/
+	public Account getAccountByNumber(String accountNumber) {		
+		Optional<Account> account = accountRepo.findByNumber(accountNumber);		 
+		return account.orElseThrow( ()-> new AccountDoesntExistException("Account number doesnt Exist : " + accountNumber));
+	}
+	
+	
 	
 	/*  Deposit funds into account **/
-	public Account makeDeposit(DepositRequest depositRequest ,Account accountNumber) {
+	public void makeDeposit(DepositRequest depositRequest, Account account ) {
+				
+		if(isExists(account.getNumber())) {		
+			account.setBalance(account.getBalance().add(depositRequest.getAmount()));			
+			 accountRepo.save(account) ;
+			
+		}
 		
-		accountNumber.setBalance(accountNumber.getBalance().add(depositRequest.getAmountToDeposit()));
-		
-		return null;
-		
+		else throw new AccountDoesntExistException("Account number doesnt Exist");				
 	}
 	
 	

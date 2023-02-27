@@ -24,13 +24,17 @@ import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
 import com.edgar.transferapi.repositories.TransferRepository;
 import com.edgar.transferapi.repsonse.MessageResponse;
+import com.edgar.transferapi.requests.DepositRequest;
 import com.edgar.transferapi.requests.TransferRequest;
 import com.edgar.transferapi.services.AccountService;
 import com.edgar.transferapi.services.TransferService;
 
 @RestController
 @RequestMapping("/api/v1/account")
-public class AccountController {@Autowired
+public class AccountController {
+	
+	
+	@Autowired
     AccountRepository accountRepository;
 
     @Autowired
@@ -62,12 +66,13 @@ public class AccountController {@Autowired
     
     
     
-//    @PutMapping("/deposit")
-//    public ResponseEntity<Account> deposit( @RequestParam String accountNumber, @RequestParam BigDecimal amount,  @AuthenticationPrincipal User user){   
-//    	
-//    	return ResponseEntity.ok(accountService.makeDeposit(accountNumber, amount));
-//    	
-//    }
+    @PutMapping("/deposit")
+   public ResponseEntity<?> deposit( @Valid @RequestBody DepositRequest deposit,  @AuthenticationPrincipal User user){  
+    	
+    	Account account = accountService.getAccountByNumber(deposit.getAccountNumber()); 	
+    	accountService.makeDeposit(deposit, account );
+    	return new ResponseEntity<>(account, HttpStatus.OK);
+    }
     
     
 	
@@ -86,15 +91,15 @@ public class AccountController {@Autowired
     	Optional<Account> destination_account_optional = accountRepository.findByNumber(transferRequest.getDestination_account_number());
     	
     	
-    	//check if accounts are valid/present 
+    
     	
     	
-    	boolean source_account_not_found = !source_account_optional.isPresent(); // return true if not found
-    	boolean destination_account_not_found = !destination_account_optional.isPresent(); // return true if not found
+    	boolean source_account_not_found = !source_account_optional.isPresent(); 
+    	boolean destination_account_not_found = !destination_account_optional.isPresent();
     	
     	
     	
-    	//if not valid/present , throw errors
+    	
     	
     	
     	if(source_account_not_found) {
@@ -108,17 +113,17 @@ public class AccountController {@Autowired
     	}
     	
     	
-    	Account source_account = source_account_optional.get(); // if source account is present, get it
-    	Account destination_account = destination_account_optional.get();  // if destination account is present, get it
+    	Account source_account = source_account_optional.get(); 
+    	Account destination_account = destination_account_optional.get(); 
     	  	
         User user = new User();
         Transfer transfer = transferService.transfer(transferRequest, source_account, destination_account, user);
         
-        // save  accounts  info     
+       
         accountRepository.save(source_account);
         accountRepository.save(destination_account);
         
-        //save transaction info
+       
         transferRepository.save(transfer);
         
         

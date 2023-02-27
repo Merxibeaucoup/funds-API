@@ -12,18 +12,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DepositRequest {
-	
-	
-	
-	
+public class WithdrawRequest {
+
 	@NotBlank(message="source account cannot be left blank")
 	private String accountNumber;
 	
 	@NotNull(message="amount can not be null or empty")
 	@Positive
 	private BigDecimal amount;
-	
-	
-
 }

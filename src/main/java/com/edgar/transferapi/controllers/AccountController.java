@@ -1,5 +1,6 @@
 package com.edgar.transferapi.controllers;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edgar.transferapi.models.Account;
@@ -48,13 +51,25 @@ public class AccountController {@Autowired
 		return ResponseEntity.ok("Helloo from the secured endpoint");
 	}
 	
-	//register account
+	/* register account **/
     @PostMapping("/register")
     public ResponseEntity<Account> registerAccount( @Valid @RequestBody Account account, @AuthenticationPrincipal User user){   
     	
     	return ResponseEntity.ok(accountService.newAccount(account, user));
     	
     }
+    
+    
+    
+    
+//    @PutMapping("/deposit")
+//    public ResponseEntity<Account> deposit( @RequestParam String accountNumber, @RequestParam BigDecimal amount,  @AuthenticationPrincipal User user){   
+//    	
+//    	return ResponseEntity.ok(accountService.makeDeposit(accountNumber, amount));
+//    	
+//    }
+    
+    
 	
 	
 	

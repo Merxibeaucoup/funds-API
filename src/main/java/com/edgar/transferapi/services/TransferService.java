@@ -13,7 +13,7 @@ public class TransferService {
 	
 	public Transfer transfer(TransferRequest transferRequest, Account source_account, Account destination_account , User user ) {
 		
-		transaction(transferRequest, source_account, destination_account); //invoke transaction method
+		transaction(transferRequest, source_account, destination_account);
 		
 		Transfer transfer = new Transfer();
 		// source -> target
@@ -27,14 +27,10 @@ public class TransferService {
 	
 	
 	public void transaction(TransferRequest transferRequest, Account source_account, Account destination_account) {
+			
 		
-		
-		
-		// subtract sent amount from source account balance
 		source_account.setBalance(source_account.getBalance().subtract(transferRequest.getAmount_to_send()));
 		
-		
-		// add sent amount to the destination account balance
 		
 		destination_account.setBalance(destination_account.getBalance().add(transferRequest.getAmount_to_send()));
 		

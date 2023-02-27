@@ -2,12 +2,16 @@ package com.edgar.transferapi.services;
 
 import java.math.BigDecimal;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.edgar.transferapi.exceptions.AccountNumberAlreadyExists;
 import com.edgar.transferapi.models.Account;
 import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
+import com.edgar.transferapi.requests.DepositRequest;
 import com.edgar.transferapi.requests.TransferRequest;
 
 @Service
@@ -51,8 +55,19 @@ public class AccountService {
 		}
 		
 		
-		else throw new RuntimeException();
-			
+		else throw new AccountNumberAlreadyExists("An account with this number already exists, "
+				+ "please wait a few seconds and try again");		
+		
+	}
+	
+	
+	
+	/*  Deposit funds into account **/
+	public Account makeDeposit(DepositRequest depositRequest ,Account accountNumber) {
+		
+		accountNumber.setBalance(accountNumber.getBalance().add(depositRequest.getAmountToDeposit()));
+		
+		return null;
 		
 	}
 	

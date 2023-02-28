@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.edgar.transferapi.exceptions.AccountDoesntExistException;
 import com.edgar.transferapi.exceptions.AccountNumberAlreadyExists;
+import com.edgar.transferapi.exceptions.InsufficentBalanceException;
 import com.edgar.transferapi.models.Account;
 import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
-import com.edgar.transferapi.requests.DepositRequest;
+import com.edgar.transferapi.requests.DepositWithdrawRequest;
 import com.edgar.transferapi.requests.TransferRequest;
 
 @Service
@@ -70,7 +71,7 @@ public class AccountService {
 	
 	
 	/*  Deposit funds into account **/
-	public void makeDeposit(DepositRequest depositRequest, Account account ) {
+	public void makeDeposit(DepositWithdrawRequest depositRequest, Account account ) {
 				
 		if(isExists(account.getNumber())) {		
 			account.setBalance(account.getBalance().add(depositRequest.getAmount()));			
@@ -82,6 +83,27 @@ public class AccountService {
 	}
 	
 	
+	
+	/* 
+	 *  Withdraw funds from account 
+	 * Maybe i should REFACTOR, have just one method for deposit
+	 *  and withdrawal then use ENUMs to distinguish actions  ??
+	 *  
+	 *  we will see!!
+	 **/
+	public void makeWithdrawal(DepositWithdrawRequest WithdrawRequest, Account account ) {
+				
+		if(isExists(account.getNumber())) {	
+			if(WithdrawRequest.getAmount().compareTo(account.getBalance())==1) throw new InsufficentBalanceException("Unable to withdraw money, insufficient funds in your account !");
+			
+			
+			account.setBalance(account.getBalance().subtract(WithdrawRequest.getAmount()));			
+			 accountRepo.save(account) ;
+			
+		}
+		
+		else throw new AccountDoesntExistException("Account number doesnt Exist");				
+	}
 	
 	
 	

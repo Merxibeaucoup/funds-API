@@ -1,6 +1,5 @@
 package com.edgar.transferapi.controllers;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edgar.transferapi.models.Account;
@@ -24,7 +22,7 @@ import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
 import com.edgar.transferapi.repositories.TransferRepository;
 import com.edgar.transferapi.repsonse.MessageResponse;
-import com.edgar.transferapi.requests.DepositRequest;
+import com.edgar.transferapi.requests.DepositWithdrawRequest;
 import com.edgar.transferapi.requests.TransferRequest;
 import com.edgar.transferapi.services.AccountService;
 import com.edgar.transferapi.services.TransferService;
@@ -55,7 +53,7 @@ public class AccountController {
 		return ResponseEntity.ok("Helloo from the secured endpoint");
 	}
 	
-	/* register account **/
+	/* register account endpoint **/
     @PostMapping("/register")
     public ResponseEntity<Account> registerAccount( @Valid @RequestBody Account account, @AuthenticationPrincipal User user){   
     	
@@ -65,14 +63,26 @@ public class AccountController {
     
     
     
-    
+    /* deposit funds endpoint **/
     @PutMapping("/deposit")
-   public ResponseEntity<?> deposit( @Valid @RequestBody DepositRequest deposit,  @AuthenticationPrincipal User user){  
+   public ResponseEntity<?> deposit( @Valid @RequestBody DepositWithdrawRequest deposit,  @AuthenticationPrincipal User user){  
     	
     	Account account = accountService.getAccountByNumber(deposit.getAccountNumber()); 	
     	accountService.makeDeposit(deposit, account );
     	return new ResponseEntity<>(account, HttpStatus.OK);
     }
+    
+    
+    /* withdraw funds endpoint **/
+    @PutMapping("/withdraw")
+   public ResponseEntity<?> withdraw( @Valid @RequestBody DepositWithdrawRequest withdraw,  @AuthenticationPrincipal User user){  
+    	
+    	Account account = accountService.getAccountByNumber(withdraw.getAccountNumber()); 	
+    	accountService.makeWithdrawal(withdraw, account );
+    	return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+    
+    
     
     
 	

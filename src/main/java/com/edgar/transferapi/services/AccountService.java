@@ -13,7 +13,6 @@ import com.edgar.transferapi.models.Account;
 import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
 import com.edgar.transferapi.requests.DepositWithdrawRequest;
-import com.edgar.transferapi.requests.TransferRequest;
 
 @Service
 public class AccountService {
@@ -21,12 +20,6 @@ public class AccountService {
 	
 	@Autowired
 	private AccountRepository accountRepo;
-	
-	
-	/* checks if there is balance money for you to send funds **/
-	public boolean not_have_enough_balance(TransferRequest transferRequest, Account source_account) {
-        return source_account.getBalance().compareTo(transferRequest.getAmount_to_send()) != 1;
-    }
 	
 	
 	
@@ -65,7 +58,7 @@ public class AccountService {
 	/*  getAccount By number **/
 	public Account getAccountByNumber(String accountNumber) {		
 		Optional<Account> account = accountRepo.findByNumber(accountNumber);		 
-		return account.orElseThrow( ()-> new AccountDoesntExistException("Account number doesnt Exist : " + accountNumber));
+		return account.orElseThrow( ()-> new AccountDoesntExistException("Account number doesnt Exist for : " + accountNumber));
 	}
 	
 	

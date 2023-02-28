@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Positive;
 
 import com.edgar.transferapi.models.user.User;
 
@@ -29,7 +29,7 @@ public class Transfer {
 	private String destination_account_number;
 	
 	@NotNull(message="amount can not be null or empty")
-	@Size(min=1, message="value must be greater than zero")
+	@Positive(message="amount must be greater than 0.00")
 	private BigDecimal amount_to_send;
 	
 	@OneToOne
@@ -39,16 +39,21 @@ public class Transfer {
 		
 	}
 
-	public Transfer( @NotBlank(message = "source account cannot be left blank") String from_account_number,
+	
+
+	public Transfer(Long id, @NotBlank(message = "source account cannot be left blank") String from_account_number,
 			@NotBlank(message = "destination account cannot be left blank") String destination_account_number,
-			@NotNull(message = "amount can not be null or empty") @Size(min = 1, message = "value must be greater than zero") BigDecimal amount_to_send,
+			@NotNull(message = "amount can not be null or empty") @Positive(message = "amount must be greater than 0.00") BigDecimal amount_to_send,
 			User user_transfer) {
 		super();
+		this.id = id;
 		this.from_account_number = from_account_number;
 		this.destination_account_number = destination_account_number;
 		this.amount_to_send = amount_to_send;
 		this.user_transfer = user_transfer;
 	}
+
+
 
 	public Long getId() {
 		return id;

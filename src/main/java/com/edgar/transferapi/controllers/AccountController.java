@@ -21,9 +21,7 @@ import com.edgar.transferapi.models.Transfer;
 import com.edgar.transferapi.models.user.User;
 import com.edgar.transferapi.repositories.AccountRepository;
 import com.edgar.transferapi.repositories.TransferRepository;
-import com.edgar.transferapi.repsonse.MessageResponse;
 import com.edgar.transferapi.requests.DepositWithdrawRequest;
-import com.edgar.transferapi.requests.TransferRequest;
 import com.edgar.transferapi.services.AccountService;
 import com.edgar.transferapi.services.TransferService;
 
@@ -92,42 +90,18 @@ public class AccountController {
 	//make transfer
     @Transactional
     @PostMapping("/transfer")
-    public ResponseEntity<?> transferFunds(@Valid @RequestBody TransferRequest transferRequest){
+    public ResponseEntity<?> transferFunds(@Valid @RequestBody Transfer transfer, @AuthenticationPrincipal User user){
+    	   	
     	
-    	MessageResponse error = new MessageResponse(); // use throughout with out multi declaration 
-    	
-    	
-    	Optional<Account> source_account_optional = accountRepository.findByNumber(transferRequest.getFrom_account_number());
-    	Optional<Account> destination_account_optional = accountRepository.findByNumber(transferRequest.getDestination_account_number());
-    	
-    	
-    
-    	
-    	
-    	boolean source_account_not_found = !source_account_optional.isPresent(); 
-    	boolean destination_account_not_found = !destination_account_optional.isPresent();
-    	
-    	
-    	
-    	
-    	
-    	
-    	if(source_account_not_found) {
-    		error.setError("Source account not found for this user!");
-    		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
-    	}
-    	
-    	if(destination_account_not_found) {
-    		error.setError("There is no such account in our system, please verify and try again");
-    		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    	}
-    	
+    	Optional<Account> source_account_optional = accountRepository.findByNumber(transfer.getFrom_account_number());
+    	Optional<Account> destination_account_optional = accountRepository.findByNumber(transfer.getDestination_account_number());
+    	   	
     	
     	Account source_account = source_account_optional.get(); 
     	Account destination_account = destination_account_optional.get(); 
     	  	
-        User user = new User();
-        Transfer transfer = transferService.transfer(transferRequest, source_account, destination_account, user);
+       
+        transferService.transfer(transfer, source_account, destination_account, user);
         
        
         accountRepository.save(source_account);
@@ -138,11 +112,11 @@ public class AccountController {
         
         
         
-        return new ResponseEntity<>(transfer, HttpStatus.CREATED); //return response
+        return new ResponseEntity<>(transfer, HttpStatus.CREATED); 
         
         
     }
     
-    //get balance
+  
 
 }

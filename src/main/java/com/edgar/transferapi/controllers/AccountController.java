@@ -87,7 +87,7 @@ public class AccountController {
 	
 	
 	
-	//make transfer
+    /* transfer funds to another account endpoint **/
     @Transactional
     @PostMapping("/transfer")
     public ResponseEntity<?> transferFunds(@Valid @RequestBody Transfer transfer, @AuthenticationPrincipal User user){

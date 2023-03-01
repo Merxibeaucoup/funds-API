@@ -1,5 +1,6 @@
 package com.edgar.transferapi.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -8,12 +9,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edgar.transferapi.models.Account;
@@ -80,11 +84,9 @@ public class AccountController {
     	return new ResponseEntity<>(account, HttpStatus.OK);
     }
     
+   
     
     
-    
-	
-	
 	
 	
     /* transfer funds to another account endpoint **/
@@ -116,6 +118,30 @@ public class AccountController {
         
         
     }
+    
+    
+    /* get all accounts of a user endpoint **/
+    @PostMapping("/user/accounts")
+    public ResponseEntity<List<Account>> userAccounts(@AuthenticationPrincipal User user){
+    	return ResponseEntity.ok(accountService.getAllForUser(user));
+    }
+    
+    
+    @DeleteMapping("/delete")
+    @Secured({ "USER", "ADMIN" })
+    public ResponseEntity<?> deleteUserByAccountNumber(@RequestParam  String accountNumber){
+    	accountService.deleteAccountByNumber(accountNumber);
+    	return new ResponseEntity<>( HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PostMapping
+    @Secured({"ADMIN"})
+    public ResponseEntity<List<Account>> getAll(){
+    	return ResponseEntity.ok(accountService.getAllForAll());
+    }
+    
+    
     
   
 

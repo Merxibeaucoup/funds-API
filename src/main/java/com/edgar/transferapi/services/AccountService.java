@@ -1,6 +1,7 @@
 package com.edgar.transferapi.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,34 @@ public class AccountService {
 	
 	
 	
+	
+	/*  get All open Accounts Belonging to User **/
+	public List<Account> getAllForUser(User user){
+		return accountRepo.findByUser(user);
+	}
+	
+	
+	/*  delete  account by id **/
+	public void deleteAccountByNumber(String accountNumber) {
+		
+		if(isExists(accountNumber)) {
+			Optional<Account> account = accountRepo.findByNumber(accountNumber);	
+			accountRepo.delete(account.get());
+			
+		}
+		
+		else throw new AccountDoesntExistException("Account with an accountNumber :: "+ accountNumber +" doesnt exist in the system");
+				 
+	}
+	
+	
+	/*  get all accounts in the system  ---> Admin only accessible **/
+	public List<Account> getAllForAll(){
+		return accountRepo.findAll();
+	}
+	
+	
+	
 	/*  Deposit funds into account **/
 	public void makeDeposit(DepositWithdrawRequest depositRequest, Account account ) {
 				
@@ -119,4 +148,13 @@ public class AccountService {
 		}
 		else return false;
 	}
+	
+//	/* check id**/
+//	private boolean isExists(Long id) {
+//		if(accountRepo.existsById(id)) {
+//			return true;
+//		}
+//		
+//		else return false;
+//	}
 }

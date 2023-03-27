@@ -29,7 +29,7 @@ public class Account {
 	@NotNull(message="balance can not be empty")
 	private BigDecimal balance;
 	
-	/*  created account belongs to a user **/
+	/* many created accounts belongs to a user **/
 	@ManyToOne private User user;
 	
 	public Account() {

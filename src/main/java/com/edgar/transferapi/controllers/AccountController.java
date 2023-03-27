@@ -121,14 +121,13 @@ public class AccountController {
     
     
     /* get all accounts of a user endpoint **/
-    @PostMapping("/user/accounts")
+    @GetMapping("/user/accounts")
     public ResponseEntity<List<Account>> userAccounts(@AuthenticationPrincipal User user){
     	return ResponseEntity.ok(accountService.getAllForUser(user));
     }
     
     
     @DeleteMapping("/delete")
-    @Secured({ "USER", "ADMIN" })
     public ResponseEntity<?> deleteUserByAccountNumber(@RequestParam  String accountNumber){
     	accountService.deleteAccountByNumber(accountNumber);
     	return new ResponseEntity<>( HttpStatus.ACCEPTED);
@@ -136,7 +135,6 @@ public class AccountController {
     
     
     @PostMapping
-    @Secured({"ADMIN"})
     public ResponseEntity<List<Account>> getAll(){
     	return ResponseEntity.ok(accountService.getAllForAll());
     }
